@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+third_party/
+data/
+work/
+models/
+runs/
+*.partial
