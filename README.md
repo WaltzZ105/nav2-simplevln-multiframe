@@ -1,4 +1,4 @@
-# NAV2 × SimpleVLN 多帧交接
+# NAV2 × SimpleVLN 多帧
 
 该版本把 SimpleVLN 官方的逐动作多帧处理接入此前的四卡 ms-swift 训练入口，保留 NAV2 的 Qwen3.5-4B、原 LoRA、输入投影、heatmap 和三步动作头。 [NAV2 模型与双头](https://github.com/WaltzZ105/nav2/tree/be608fed09738df5333b41e4982f6f05571043be/vendor)
 
@@ -11,7 +11,7 @@
 | 原项目使用的 R2R train episode 标注 | [VLN-CE](https://jacobkrantz.github.io/vlnce/data) | 补齐 15 个分片缺失的起始位姿 |
 | SimpleVLN 固定源码 | [SimpleVLN DataProcess](https://github.com/simplevln/SimpleVLN/tree/0216a1aa2d78e5f093595265d28bd90b29e0c87e/DataProcess) | 官方历史采样、首帧处理、提示和相机配置 |
 
-HF 有 16,536 个 TAR 和 4,115,900 条状态记录。四份清单的 SHA-256 与原训练机逐一匹配。实际有样本的档案为 16,299 个。其中 15 个 R2R train 档案缺 step 0 位姿，原项目的 R2R train 标注包含对应 15 个 episode。已发布的图像随三步决策状态存储。完整多帧要从根姿态重放基本动作。构建脚本直接引用 HF TAR 中原有的 NPZ 偏移，保留 heatmap 及三步动作监督。具备上述资产的接手人可以在本地构建 RGB 缓存，原 HF 数据可直接复用。
+HF 有 16,536 个 TAR 和 4,115,900 条状态记录。四份清单的 SHA-256 与原训练机逐一匹配。实际有样本的档案为 16,299 个。其中 15 个 R2R train 档案缺 step 0 位姿，原项目的 R2R train 标注包含对应 15 个 episode。已发布的图像随三步决策状态存储。完整多帧要从根姿态重放基本动作。构建脚本直接引用 HF TAR 中原有的 NPZ 偏移，保留 heatmap 及三步动作监督。原 HF 数据可直接复用。
 
 ## 1. 下载和审计
 
