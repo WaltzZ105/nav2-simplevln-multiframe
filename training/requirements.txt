@@ -1,0 +1,10 @@
+accelerate==1.15.0
+datasets==4.8.4
+huggingface_hub==2.3.0
+numpy==2.5.4
+peft==0.19.1
+Pillow==13.0.0
+qwen-vl-utils==0.0.14
+safetensors==0.8.0
+tokenizers==0.23.3
+transformers==5.20.2
