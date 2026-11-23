@@ -2,6 +2,8 @@
 
 该版本把 SimpleVLN 官方的逐动作多帧处理接入此前的四卡 ms-swift 训练入口，保留 NAV2 的 Qwen3.5-4B、原 LoRA、输入投影、heatmap 和三步动作头。 [NAV2 模型与双头](https://github.com/WaltzZ105/nav2/tree/be608fed09738df5333b41e4982f6f05571043be/vendor)
 
+[SimpleVLN 官方 Megatron 训练入口与验收](training/megatron/README.md) 使用下文相同的数据准备，并附有独立的环境和启动命令。
+
 ## 数据从哪里来
 
 | 输入 | 来源 | 用途 |
