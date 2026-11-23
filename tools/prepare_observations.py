@@ -110,6 +110,17 @@ def render_episode(renderer, by_prefix, frame_dir):
     return saved
 
 
+def observation_sample(row, frame_paths, label_archive, upstream):
+    positions = history_positions(row["step"], upstream)
+    return {
+        "system": upstream.SYSTEM_PROMPT,
+        "messages": [{"from": "user", "value": upstream.build_vln_prompt(row["instruction"], len(positions))}],
+        "images": [str(frame_paths[step]) for step in positions],
+        "nav2": {"node_id": row["node_id"], "archive": str(label_archive),
+                 "labels_ref": row["labels_ref"], "observation_steps": positions},
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", type=Path, required=True)
@@ -238,22 +249,11 @@ def prepare_archive(renderer, root, output, archive, rows, by_prefix, upstream, 
         with (temporary / "observations.jsonl").open("w", encoding="utf-8") as target:
             for row in rows:
                 prefix = tuple(row["prefix_actions"])
-                positions = history_positions(len(prefix), upstream)
-                image_paths = [
-                    str(episode_dir / "rgb" / images[prefix[:step]].name) for step in positions
-                ]
+                positions = history_positions(row["step"], upstream)
+                paths = {step: episode_dir / "rgb" / images[prefix[:step]].name for step in positions}
                 label_archive = root / row.get("labels_archive", archive)
-                target.write(json.dumps({
-                    "system": upstream.SYSTEM_PROMPT,
-                    "messages": [
-                        {"from": "user", "value": upstream.build_vln_prompt(row["instruction"], len(positions))}
-                    ],
-                    "images": image_paths,
-                    "nav2": {
-                        "node_id": row["node_id"], "archive": str(label_archive),
-                        "labels_ref": row["labels_ref"], "observation_steps": positions,
-                    },
-                }, ensure_ascii=False) + "\n")
+                record = observation_sample(row, paths, label_archive, upstream)
+                target.write(json.dumps(record, ensure_ascii=False) + "\n")
         result = {"input": receipt, "rendered_frames": len(images), "black_frames": renderer.black_frames}
         (temporary / "receipt.json").write_text(json.dumps(result, indent=2) + "\n")
         os.rename(temporary, episode_dir)
